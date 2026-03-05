@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Spring AI MCP Chat</title>
+    <style>
+        body {
+            display: flex;
+            gap: 20px;
+            margin: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+        .main-content {
+            flex: 2;
+            min-width: 0;
+        }
+
+        .sidebar {
+            flex: 1;
+            min-width: 300px;
+            max-width: 400px;
+        }
+
+        .session-management {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+
+        .session-controls {
+            margin-bottom: 10px;
+        }
+
+        .current-session {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+
+        .session-list {
+            border: 1px solid #ccc;
+            padding: 15px;
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+
+        .session-list h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        #sessionList {
+            flex: 1;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            padding: 10px;
+            background-color: #fafafa;
+        }
+
+        .session-entry {
+            border-bottom: 1px solid #ddd;
+            padding: 8px 0;
+            cursor: pointer;
+            margin-bottom: 5px;
+        }
+
+        .session-entry:hover {
+            background-color: #e9ecef;
+            border-radius: 4px;
+            padding-left: 5px;
+            transition: all 0.2s ease;
+        }
+
+        .session-entry.active {
+            background-color: #007bff;
+            color: white;
+            border-radius: 4px;
+            padding-left: 5px;
+        }
+
+        .session-title {
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+
+        .session-date {
+            font-size: 0.8em;
+            color: #666;
+        }
+
+        .session-entry.active .session-date {
+            color: #ccc;
+        }
+
+        .chat-history {
+            border: 1px solid #ddd;
+            padding: 15px;
+            min-height: 200px;
+            margin-bottom: 20px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+
+        .clear-sessions {
+            background-color: #dc3545;
+        }
+
+        .clear-sessions:hover {
+            background-color: #c82333;
+        }
+
+        .prompt-history {
+            border: 1px solid #ccc;
+            padding: 15px;
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .prompt-history h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        #historyList {
+            flex: 1;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            padding: 10px;
+            background-color: #fafafa;
+        }
+
+        .prompt-entry {
+            border-bottom: 1px solid #ddd;
+            padding: 8px 0;
+            cursor: pointer;
+            margin-bottom: 5px;
+        }
+        .prompt-entry:hover {
+            background-color: #e9ecef;
+            border-radius: 4px;
+            padding-left: 5px;
+            transition: all 0.2s ease;
+        }
+        .prompt-date {
+            font-size: 0.8em;
+            color: #666;
+            font-weight: bold;
+        }
+        .prompt-text {
+            margin-top: 5px;
+            line-height: 1.4;
+        }
+        .clear-history {
+            margin-top: 15px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .clear-history:hover {
+            background-color: #c82333;
+        }
+
+        #prompt {
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        #response {
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            margin-top: 10px;
+            word-wrap: normal;
+        }
+
+        button {
+            margin-right: 10px;
+            margin-bottom: 10px;
+            padding: 8px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .button-gh {
+            background-color: #303435;
+        }
+
+        .button-oa {
+            background-color: #143cba;
+        }
+
+        #button-bar {
+            margin: 15px 0;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .prompt-entry.has-response {
+            border-left: 3px solid #28a745;
+        }
+
+        .response-indicator {
+            font-size: 0.7em;
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .tools-container {
+            margin-bottom: 20px;
+        }
+
+        .tool-item {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+        }
+
+        .tool-item.enabled {
+            border-color: #28a745;
+            background-color: #f8fff9;
+        }
+
+        .tool-header {
+            padding: 10px;
+            cursor: pointer;
+            background-color: #e9ecef;
+            border-radius: 4px 4px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tool-header:hover {
+            background-color: #dee2e6;
+        }
+
+        .tool-header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tool-checkbox {
+            margin: 0;
+            transform: scale(1.2);
+        }
+
+        .tool-name {
+            font-weight: bold;
+            color: #495057;
+        }
+
+        .tool-toggle {
+            font-size: 1.2em;
+            color: #6c757d;
+        }
+
+        .tool-controls {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .enabled-tools-count {
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+
+        .tool-content {
+            padding: 15px;
+            display: none;
+            border-top: 1px solid #ddd;
+            background-color: white;
+        }
+
+        .tool-description {
+            margin-bottom: 15px;
+            color: #495057;
+            line-height: 1.4;
+        }
+
+        .tool-schema {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 3px;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+
+        .tool-schema-label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #495057;
+        }
+    </style>
+</head>
+<body>
+<div class="main-content">
+    <h1>Spring AI MCP Chat</h1>
+
+    <!-- Session Management -->
+    <div class="session-management">
+        <div class="session-controls">
+            <button onclick="createNewSession()">Neue Konversation</button>
+            <button onclick="clearAllSessions()" class="clear-sessions">Alle Sessions löschen</button>
+        </div>
+        <div class="current-session">
+            <span id="currentSessionTitle">Keine aktive Session</span>
+            <button id="sessionModeToggle" onclick="toggleSessionMode()">Session-Modus aktivieren</button>
+        </div>
+    </div>
+
+    <!-- Chat Interface -->
+    <textarea id="prompt" rows="6" cols="100" placeholder="Enter prompt"></textarea><br>
+    <div id="button-bar">
+        <!-- Buttons werden dynamisch geladen -->
+    </div>
+
+    <!-- Chat History Display -->
+    <div class="chat-history" id="chatHistory">
+        <pre id="response">No answer yet...</pre>
+    </div>
+
+    <div class="tools-container">
+        <h3>Verfügbare Tools:</h3>
+        <div class="tool-controls">
+            <button onclick="selectAllTools()">Alle auswählen</button>
+            <button onclick="deselectAllTools()">Alle abwählen</button>
+            <span class="enabled-tools-count" id="enabledToolsCount">0 von 0 Tools aktiviert</span>
+        </div>
+        <div id="tools"></div>
+    </div>
+</div>
+
+<div class="sidebar">
+    <!-- Session Liste -->
+    <div class="session-list">
+        <h3>Chat Sessions</h3>
+        <div id="sessionList"></div>
+    </div>
+
+    <!-- Prompt Historie -->
+    <div class="prompt-history">
+        <h3>Prompt-Historie</h3>
+        <div id="historyList"></div>
+        <button class="clear-history" onclick="clearHistory()">Historie löschen</button>
+    </div>
+</div>
+
+<script>
+    // LocalStorage-Schlüssel für die Prompt-Historie
+    const STORAGE_KEY = 'prompt_history';
+
+    // Session Management
+    let currentSession = null;
+    let sessionMode = false;
+
+    async function sendMessage(provider) {
+        if (sessionMode && currentSession) {
+            await chatWithSession(provider);
+        } else {
+            await chat(provider);
+        }
+    }
+
+    async function chat(provider) {
+        const prompt = document.getElementById('prompt').value;
+        if (!prompt.trim()) {
+            alert('Bitte geben Sie eine Nachricht ein.');
+            return;
+        }
+
+        // Prompt zur Historie hinzufügen, falls nicht leer
+        if (prompt.trim()) {
+            savePromptToHistory(prompt.trim());
+        }
+
+        document.getElementById('response').textContent = 'Warte auf Antwort...';
+
+        // Hole aktivierte Tools
+        const enabledTools = getEnabledToolsFromStorage();
+        const url = new URL(`/api/chat/${provider}`, window.location.origin);
+
+        // Füge aktivierte Tools als Query-Parameter hinzu
+        enabledTools.forEach(tool => url.searchParams.append('enabledTools', tool));
+
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: {'Content-Type': 'text/plain'},
+            body: prompt
+        });
+        const responseText = await res.text();
+        document.getElementById('response').textContent = responseText;
+
+        // Antwort zur Historie hinzufügen
+        if (prompt.trim()) {
+            saveResponseToHistory(prompt.trim(), responseText, provider);
+        }
+    }
+
+    async function chatWithSession(provider) {
+        if (!currentSession) {
+            alert('Keine aktive Session. Bitte erstellen Sie eine neue Session.');
+            return;
+        }
+
+        const prompt = document.getElementById('prompt').value;
+        if (!prompt.trim()) {
+            alert('Bitte geben Sie eine Nachricht ein.');
+            return;
+        }
+
+        document.getElementById('response').textContent = 'Warte auf Antwort...';
+
+        try {
+            // Hole aktivierte Tools
+            const enabledTools = getEnabledToolsFromStorage();
+            const url = new URL(`/api/chat/${provider}/session/${currentSession.sessionId}`, window.location.origin);
+
+            // Füge aktivierte Tools als Query-Parameter hinzu
+            enabledTools.forEach(tool => url.searchParams.append('enabledTools', tool));
+
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: {'Content-Type': 'text/plain'},
+                body: prompt
+            });
+
+            if (!res.ok) {
+                throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+            }
+
+            const responseText = await res.text();
+
+            // Aktualisiere die Session-Daten
+            await refreshCurrentSession();
+
+            // Zeige die Antwort an
+            displaySessionHistory();
+
+            // Leere das Eingabefeld
+            document.getElementById('prompt').value = '';
+
+        } catch (error) {
+            console.error('Fehler beim Senden der Nachricht:', error);
+            document.getElementById('response').textContent = `Fehler: ${error.message}`;
+        }
+    }
+
+    async function createNewSession() {
+        const title = prompt('Titel für die neue Konversation:', 'Neue Konversation');
+        if (title === null) return;
+
+        try {
+            const res = await fetch('/api/chat/sessions', {
+                method: 'POST',
+                headers: {'Content-Type': 'text/plain'},
+                body: title
+            });
+
+            if (!res.ok) {
+                throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+            }
+
+            const session = await res.json();
+            currentSession = session;
+            sessionMode = true;
+
+            updateSessionModeDisplay();
+            await loadSessions();
+
+        } catch (error) {
+            console.error('Fehler beim Erstellen der Session:', error);
+            alert('Fehler beim Erstellen der Session: ' + error.message);
+        }
+    }
+
+    async function loadSessions() {
+        try {
+            const res = await fetch('/api/chat/sessions');
+            if (!res.ok) {
+                throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+            }
+
+            const sessions = await res.json();
+            displaySessions(sessions);
+
+        } catch (error) {
+            console.error('Fehler beim Laden der Sessions:', error);
+            document.getElementById('sessionList').innerHTML = '<p>Fehler beim Laden der Sessions</p>';
+        }
+    }
+
+    function displaySessions(sessions) {
+        const sessionList = document.getElementById('sessionList');
+
+        if (!sessions || sessions.length === 0) {
+            sessionList.innerHTML = '<p>Keine Sessions vorhanden</p>';
+            return;
+        }
+
+        sessionList.innerHTML = sessions
+            .sort((a, b) => new Date(b.lastActivity) - new Date(a.lastActivity))
+            .map(session => `
+                <div class="session-entry ${currentSession && currentSession.sessionId === session.sessionId ? 'active' : ''}"
+                     onclick="selectSession('${session.sessionId}')">
+                    <div class="session-title">${escapeHtml(session.title)}</div>
+                    <div class="session-date">${formatSessionDate(session.lastActivity)} • ${session.messages.length} Nachrichten</div>
+                </div>
+            `).join('');
+    }
+
+    async function selectSession(sessionId) {
+        try {
+            const res = await fetch(`/api/chat/sessions/${sessionId}`);
+            if (!res.ok) {
+                throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+            }
+
+            const session = await res.json();
+            currentSession = session;
+            sessionMode = true;
+
+            updateSessionModeDisplay();
+            displaySessionHistory();
+            await loadSessions(); // Aktualisiere die Session-Liste
+
+        } catch (error) {
+            console.error('Fehler beim Laden der Session:', error);
+            alert('Fehler beim Laden der Session: ' + error.message);
+        }
+    }
+
+    async function refreshCurrentSession() {
+        if (currentSession) {
+            await selectSession(currentSession.sessionId);
+        }
+    }
+
+    function displaySessionHistory() {
+        if (!currentSession || !currentSession.messages) {
+            document.getElementById('response').textContent = 'Keine Nachrichten in dieser Session.';
+            return;
+        }
+
+        const chatHistory = document.getElementById('response');
+        const messages = currentSession.messages.map(msg =>
+            `${msg.role === 'user' ? 'Benutzer' : 'Assistant'}: ${msg.content}`
+        ).join('\n\n---\n\n');
+
+        chatHistory.textContent = messages || 'Keine Nachrichten in dieser Session.';
+    }
+
+    function toggleSessionMode() {
+        sessionMode = !sessionMode;
+        if (!sessionMode) {
+            currentSession = null;
+        }
+        updateSessionModeDisplay();
+    }
+
+    function updateSessionModeDisplay() {
+        const toggle = document.getElementById('sessionModeToggle');
+        const sessionTitle = document.getElementById('currentSessionTitle');
+
+        if (sessionMode && currentSession) {
+            toggle.textContent = 'Session-Modus deaktivieren';
+            sessionTitle.textContent = `Aktive Session: ${currentSession.title}`;
+            displaySessionHistory();
+        } else {
+            toggle.textContent = 'Session-Modus aktivieren';
+            sessionTitle.textContent = 'Keine aktive Session';
+            document.getElementById('response').textContent = 'No answer yet...';
+        }
+    }
+
+    async function clearAllSessions() {
+        if (!confirm('Möchten Sie wirklich alle Sessions löschen?')) {
+            return;
+        }
+
+        try {
+            const res = await fetch('/api/chat/sessions', {
+                method: 'DELETE'
+            });
+
+            if (!res.ok) {
+                throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+            }
+
+            currentSession = null;
+            sessionMode = false;
+            updateSessionModeDisplay();
+            await loadSessions();
+
+        } catch (error) {
+            console.error('Fehler beim Löschen der Sessions:', error);
+            alert('Fehler beim Löschen der Sessions: ' + error.message);
+        }
+    }
+
+    function formatSessionDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleString('de-DE', {
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
+
+    // Prompt zur Historie hinzufügen
+    function savePromptToHistory(promptText) {
+        let history = getHistoryFromStorage();
+
+        // Entferne existierenden Eintrag falls vorhanden
+        history = history.filter(entry => entry.text !== promptText);
+
+        // Füge neuen Eintrag am Anfang hinzu
+        const newEntry = {
+            text: promptText,
+            timestamp: new Date().toISOString(),
+            displayDate: formatDate(new Date()),
+            hasResponse: false
+        };
+        history.unshift(newEntry);
+
+        // Speichere in LocalStorage
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+
+        // Aktualisiere die Anzeige
+        displayHistory();
+    }
+
+    // Antwort zur Historie hinzufügen
+    function saveResponseToHistory(promptText, responseText, provider) {
+        let history = getHistoryFromStorage();
+
+        // Finde den entsprechenden Prompt-Eintrag
+        const entryIndex = history.findIndex(entry => entry.text === promptText);
+        if (entryIndex !== -1) {
+            history[entryIndex].response = responseText;
+            history[entryIndex].provider = provider;
+            history[entryIndex].hasResponse = true;
+            history[entryIndex].responseDate = formatDate(new Date());
+
+            // Speichere in LocalStorage
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+
+            // Aktualisiere die Anzeige
+            displayHistory();
+        }
+    }
+
+    // Historie aus LocalStorage laden
+    function getHistoryFromStorage() {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        return stored ? JSON.parse(stored) : [];
+    }
+
+    // Datum formatieren
+    function formatDate(date) {
+        return date.toLocaleString('de-DE', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+    }
+
+    // Historie anzeigen
+    function displayHistory() {
+        const history = getHistoryFromStorage();
+        const historyList = document.getElementById('historyList');
+
+        if (history.length === 0) {
+            historyList.innerHTML = '<p>Keine gespeicherten Prompts</p>';
+            return;
+        }
+
+        historyList.innerHTML = history.map(entry => `
+            <div class="prompt-entry ${entry.hasResponse ? 'has-response' : ''}" onclick="loadEntry('${escapeHtml(entry.text)}', ${entry.hasResponse})">
+                <div class="prompt-date">${entry.displayDate}</div>
+                ${entry.hasResponse ? `<div class="response-indicator">✓ Antwort von ${entry.provider}</div>` : ''}
+                <div class="prompt-text">${escapeHtml(entry.text.substring(0, 100))}${entry.text.length > 100 ? '...' : ''}</div>
+            </div>
+        `).join('');
+    }
+
+    // HTML-Zeichen escapen
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML.replace(/'/g, '&#39;');
+    }
+
+    // Eintrag aus Historie laden
+    function loadEntry(promptText, hasResponse) {
+        if (hasResponse) {
+            // Zeige Antwort an
+            const history = getHistoryFromStorage();
+            const entry = history.find(e => e.text === promptText);
+            if (entry && entry.response) {
+                document.getElementById('response').textContent = entry.response;
+                document.getElementById('prompt').value = promptText;
+            }
+        } else {
+            // Lade nur den Prompt
+            document.getElementById('prompt').value = promptText;
+        }
+    }
+
+    // Historie löschen
+    function clearHistory() {
+        if (confirm('Möchten Sie die gesamte Prompt-Historie löschen?')) {
+            localStorage.removeItem(STORAGE_KEY);
+            displayHistory();
+        }
+    }
+
+    // Globale Variable für ursprüngliche Tool-Reihenfolge
+    let originalToolsOrder = [];
+
+    async function fetchTools() {
+        try {
+            const res = await fetch('/api/tools');
+            const tools = await res.json();
+            // Speichere ursprüngliche Reihenfolge mit Index
+            originalToolsOrder = tools.map((tool, index) => ({ ...tool, originalIndex: index }));
+            displayTools(originalToolsOrder);
+        } catch (error) {
+            console.error('Fehler beim Laden der Tools:', error);
+            document.getElementById('tools').innerHTML = '<p>Fehler beim Laden der Tools</p>';
+        }
+    }
+
+    function displayTools(tools) {
+        const toolsContainer = document.getElementById('tools');
+
+        if (!tools || tools.length === 0) {
+            toolsContainer.innerHTML = '<p>Keine Tools verfügbar</p>';
+            updateEnabledToolsCount();
+            return;
+        }
+
+        // Sortiere Tools: aktivierte zuerst (nach originalIndex), dann inaktive (nach originalIndex)
+        const sortedTools = [...tools].sort((a, b) => {
+            const aEnabled = a.enabled || false;
+            const bEnabled = b.enabled || false;
+
+            if (aEnabled && !bEnabled) return -1;
+            if (!aEnabled && bEnabled) return 1;
+            // Wenn beide den gleichen Status haben, sortiere nach ursprünglichem Index
+            return a.originalIndex - b.originalIndex;
+        });
+
+        toolsContainer.innerHTML = sortedTools.map((tool) => `
+            <div class="tool-item ${tool.enabled ? 'enabled' : ''}" id="tool-item-${tool.originalIndex}">
+                <div class="tool-header">
+                    <div class="tool-header-left">
+                        <input type="checkbox"
+                               class="tool-checkbox"
+                               id="tool-checkbox-${tool.originalIndex}"
+                               ${tool.enabled ? 'checked' : ''}
+                               onchange="toggleToolEnabled('${escapeHtml(tool.name)}', ${tool.originalIndex})"
+                               onclick="event.stopPropagation()">
+                        <span class="tool-name">${escapeHtml(tool.name)}</span>
+                    </div>
+                    <span class="tool-toggle" id="toggle-${tool.originalIndex}" onclick="toggleToolDetails(${tool.originalIndex})">▼</span>
+                </div>
+                <div class="tool-content" id="content-${tool.originalIndex}">
+                    <div class="tool-description">
+                        <strong>Beschreibung:</strong><br>
+                        ${escapeHtml(tool.description)}
+                    </div>
+                    <div class="tool-schema-label">Input Schema:</div>
+                    <div class="tool-schema">${JSON.stringify(JSON.parse(tool.inputSchema), null, 2)}</div>
+                </div>
+            </div>
+        `).join('');
+
+        updateEnabledToolsCount();
+    }
+
+    function toggleToolDetails(index) {
+        const content = document.getElementById(`content-${index}`);
+        const toggle = document.getElementById(`toggle-${index}`);
+
+        if (content.style.display === 'none' || content.style.display === '') {
+            content.style.display = 'block';
+            toggle.textContent = '▲';
+        } else {
+            content.style.display = 'none';
+            toggle.textContent = '▼';
+        }
+    }
+
+    // Tool-Management Funktionen (ohne LocalStorage-Persistierung)
+    function toggleToolEnabled(toolName, originalIndex) {
+        // Finde das Tool in der ursprünglichen Liste
+        const tool = originalToolsOrder.find(t => t.originalIndex === originalIndex);
+        if (tool) {
+            tool.enabled = !tool.enabled;
+            // Neu rendern mit aktualisierter Sortierung
+            displayTools(originalToolsOrder);
+        }
+    }
+
+    function selectAllTools() {
+        originalToolsOrder.forEach(tool => {
+            tool.enabled = true;
+        });
+        displayTools(originalToolsOrder);
+    }
+
+    function deselectAllTools() {
+        originalToolsOrder.forEach(tool => {
+            tool.enabled = false;
+        });
+        displayTools(originalToolsOrder);
+    }
+
+    // Aktuelle Tool-Auswahl aus der UI ermitteln (ohne LocalStorage)
+    function getEnabledToolsFromStorage() {
+        return originalToolsOrder
+            .filter(tool => tool.enabled)
+            .map(tool => tool.name);
+    }
+
+    function updateEnabledToolsCount() {
+        const totalTools = document.querySelectorAll('.tool-item').length;
+        const enabledTools = document.querySelectorAll('.tool-item.enabled').length;
+        const countElement = document.getElementById('enabledToolsCount');
+
+        if (countElement) {
+            countElement.textContent = `${enabledTools} von ${totalTools} Tools aktiviert`;
+        }
+    }
+
+    function formatJsonSchema(schema) {
+        try {
+            return JSON.stringify(schema, null, 2);
+        } catch (error) {
+            return 'Ungültiges Schema';
+        }
+    }
+
+    async function fetchProviders() {
+        try {
+            const res = await fetch('/api/chat/providers');
+            if (!res.ok) {
+                throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+            }
+
+            const providers = await res.json();
+            displayProviders(providers);
+        } catch (error) {
+            console.error('Fehler beim Laden der Provider:', error);
+            document.getElementById('button-bar').innerHTML = '<p>Fehler beim Laden der verfügbaren Modelle</p>';
+        }
+    }
+
+    function displayProviders(providers) {
+        const buttonBar = document.getElementById('button-bar');
+
+        if (!providers || Object.keys(providers).length === 0) {
+            buttonBar.innerHTML = '<p>Keine Provider verfügbar</p>';
+            return;
+        }
+
+        // Erstelle Buttons für jeden Provider
+        buttonBar.innerHTML = Object.entries(providers).map(([providerId, providerName]) => {
+            // Bestimme CSS-Klasse basierend auf Provider
+            let cssClass = 'button-gh'; // Standard
+            if (providerName.toLowerCase().includes('github')) {
+                cssClass = 'button-gh';
+            } else if (providerName.toLowerCase().includes('openai') || providerName.toLowerCase().includes('gpt')) {
+                cssClass = 'button-oa';
+            }
+
+            return `<button class="${cssClass}" onclick="sendMessage('${escapeHtml(providerId.replace('/', '-'))}')">${escapeHtml(providerName)}</button>`;
+        }).join('');
+    }
+
+    // Beim Laden der Seite
+    fetchProviders();
+    fetchTools();
+    displayHistory();
+    loadSessions();
+    updateSessionModeDisplay();
+</script>
+</body>
+</html>

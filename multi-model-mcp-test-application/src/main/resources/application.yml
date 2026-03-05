@@ -1,0 +1,148 @@
+server:
+  port: 8100
+spring:
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      base-url: https://api.openai.com
+    github:
+      api-key: ${GITHUB_API_KEY}
+      base-url: https://models.github.ai/inference
+    mcp:
+      client:
+        request-timeout: 120000
+        toolcallback:
+          enabled: true
+#        sse:
+#          connections:
+#            intellij:
+#              url: http://localhost:64343
+#            servermcplinkgithub:
+#              url: "http://localhost:8090"
+#              sse-endpoint: "/sse?s=https%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Frest-api-description%2Fmain%2Fdescriptions%2Fapi.github.com%2Fapi.github.com.json&u=https%3A%2F%2Fapi.github.com&f=%2B%2F**&h=%7B%22Authorization%22%3A%22Bearer%20${GITHUB_PAT}%22%7D"
+#            mcplinkeve:
+#              url: "http://localhost:8090"
+#              sse-endpoint: "/sse?s=https%3A%2F%2Fesi.evetech.net%2Fmeta%2Fopenapi-3.0.yaml%3Fcompatibility_date%3D2025-12-16%26u=https%3A%2F%2Fesi.evetech.net&f=%2B%2F**"
+#            mcplinkdiscord:
+#              url: "http://localhost:8090"
+#              sse-endpoint: "/sse?s=https%3A%2F%2Fraw.githubusercontent.com%2Fdiscord%2Fdiscord-api-spec%2Frefs%2Fheads%2Fmain%2Fspecs%2Fopenapi.json&u=https%3A%2F%2Fdiscord.com%2Fapi%2Fv10&f=%2B%2F**&h=%7B%22Authorization%22%3A%22Bot%20${DISCORD_BOT}%22%7D"
+#            mcplinkinvman:
+#              url: "http://localhost:8090"
+#              openapi.yaml
+#              sse-endpoint: "/sse?s=https%3A%2F%2Fraw.githubusercontent.com%2FTTomczek%2Fapis%2Frefs%2Fheads%2Fmain%2Finvoice-manager%2Fopenapi.yaml&u=http%3A%2F%2Flocalhost%3A8080%2Finvoice-manager-server&f=%2B%2F**"
+#              openapi-xml.yaml
+#              sse-endpoint: "/sse?s=https%3A%2F%2Fraw.githubusercontent.com%2FTTomczek%2Fapis%2Frefs%2Fheads%2Fmain%2Finvoice-manager%2Fopenapi-xml.yaml&u=http%3A%2F%2Flocalhost%3A8080%2Finvoice-manager-server&f=%2B%2F**"
+#              openapi-minimal.yaml
+#              sse-endpoint: "/sse?s=https%3A%2F%2Fraw.githubusercontent.com%2FTTomczek%2Fapis%2Frefs%2Fheads%2Fmain%2Finvoice-manager%2Fopenapi-minimal.yaml&u=http%3A%2F%2Flocalhost%3A8080%2Finvoice-manager-server&f=%2B%2F**"
+#              openapi-deref.yaml
+#              sse-endpoint: "/sse?s=https%3A%2F%2Fraw.githubusercontent.com%2FTTomczek%2Fapis%2Frefs%2Fheads%2Fmain%2Finvoice-manager%2Fopenapi-deref.yaml&u=http%3A%2F%2Flocalhost%3A8080%2Finvoice-manager-server&f=%2B%2F**"
+#            oasmcp:
+#                url: "http://localhost:3000"
+#                sse-endpoint: "/sse"
+#        streamable-http:
+#          connections:
+#                stainless:
+#                  url: "http://localhost:3000"
+#                  endpoint: "/"
+#            oasmcp:
+#              url: "http://localhost:3000"
+#            fastmcp:
+#              url: "http://localhost:3000"
+        stdio:
+          connections:
+#            mcpconvertdiscord:
+#              command: "cmd.exe"
+#              args:
+#                - "/c"
+#                - "python"
+#                - "C:/Users/TimTo/OneDrive/Studium/Bachelorarbeit/mcp-server/discord/generiert/convertmcp/server.py"
+#                - "'Bot'"
+#            mcpconvertgithub:
+#              command: "cmd.exe"
+#              args:
+#                - "/c"
+#                - "python"
+#                - "C:/Users/TimTo/OneDrive/Studium/Bachelorarbeit/mcp-server/github/generiert/convertmcp/server.py"
+#                - "'ghp_YourGitHubTokenHere'"
+#            mcpconvertinvman:
+#              command: "cmd.exe"
+#              args:
+#                - "/c"
+#                - "python"
+#                - "C:/Users/TimTo/OneDrive/Studium/Bachelorarbeit/mcp-server/invoice-manager/generiert/convertmcp/xml/server.py"
+#            stainlessgithub:
+#              command: "cmd.exe"
+#              args:
+#                - "/c"
+#                - "node"
+#                - "C:/Users/TimTo/OneDrive/Studium/Bachelorarbeit/mcp-server/github/generiert/stainless-packaged/index.js"
+#              env:
+#                TTO_GITHUB_API_KEY: ${GITHUB_API_KEY_REPO}
+#            tykgithub:
+#              command: "cmd.exe"
+#              args:
+#                - "/c"
+#                - "npx"
+#                - "@tyk-technologies/api-to-mcp@latest"
+#                - "--spec"
+#                - "https://raw.githubusercontent.com/github/rest-api-description/refs/heads/main/descriptions/api.github.com/api.github.com.yaml"
+#                - "--apiKey=Bearer ${GITHUB_PAT}"
+#                - "--headers=`{'Authorization':'Bearer ${GITHUB_PAT}'}`"
+#                - "--disableXMcp"
+#            tykdiscord:
+#              command: "cmd.exe"
+#              args:
+#                - "/c"
+#                - "npx"
+#                - "@tyk-technologies/api-to-mcp@latest"
+#                - "--spec"
+#                - "https://raw.githubusercontent.com/discord/discord-api-spec/refs/heads/main/specs/openapi.json"
+#                - "--securitySchemeName=BotToken"
+#                - "--apiKey=Bot ${DISCORD_BOT}"
+#                - "--securityCredentials=`{'BotToken': 'Bot ${DISCORD_BOT}'}`"
+#            tykeve:
+#              command: "cmd.exe"
+#              args:
+#                - "/c"
+#                - "npx"
+#                - "@tyk-technologies/api-to-mcp@latest"
+#                - "--spec"
+#                - "https://esi.evetech.net/meta/openapi-3.0.json?compatibility_date=2025-12-16"
+#            tykinvman:
+#              command: "cmd.exe"
+#              args:
+#                - "/c"
+#                - "npx"
+#                - "@tyk-technologies/api-to-mcp@latest"
+#                - "--spec"
+#                - "https://raw.githubusercontent.com/TTomczek/apis/refs/heads/main/invoice-manager/openapi.yaml"
+#            oasmcpgithub:
+#              command: "cmd.exe"
+#              args:
+#                - "/c"
+#                - "set"
+#                - "API_KEY=Bearer ${GITHUB_PAT}"
+#                - "&&"
+#                - "node"
+#                - "C:/Users/TimTo/OneDrive/Studium/Bachelorarbeit/mcp-server/github/generiert/oasmcp-stdio/build/index.js"
+#            oasmcpdiscord:
+#              command: "cmd.exe"
+#              args:
+#                - "/c"
+#                - "set"
+#                - "API_KEY_BOTTOKEN=Bot ${DISCORD_BOT}"
+#                - "&&"
+#                - "node"
+#                - "C:/Users/TimTo/OneDrive/Studium/Bachelorarbeit/mcp-server/discord/generiert/oasmcp-stdio/build/index.js"
+#            oasmcpeve:
+#              command: "cmd.exe"
+#              args:
+#                - "/c"
+#                - "node"
+#                - "C:/Users/TimTo/OneDrive/Studium/Bachelorarbeit/mcp-server/eve/generiert/oasmcp-stdio/build/index.js"
+            oasmcpinvman:
+              command: "cmd.exe"
+              args:
+                - "/c"
+                - "node"
+                - "C:/Users/TimTo/OneDrive/Studium/Bachelorarbeit/mcp-server/invoice-manager/generiert/oasmcp-stdio/build/index.js"

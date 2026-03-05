@@ -1,0 +1,87 @@
+<configuration>
+
+    <property name="LOG_PATH" value="logs" />
+
+    <!-- Console appender (keeps existing console logging) -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <!-- Daily rolling file appender for chat logs -->
+    <appender name="CHAT_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/chat.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- compressed daily files -->
+            <fileNamePattern>${LOG_PATH}/chat-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- keep 30 days of logs -->
+            <maxHistory>30</maxHistory>
+            <cleanHistoryOnStart>false</cleanHistoryOnStart>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <!-- Daily rolling file appender for MCP communication logs -->
+    <appender name="MCP_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/mcp.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- compressed daily files -->
+            <fileNamePattern>${LOG_PATH}/mcp-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- keep 30 days of logs -->
+            <maxHistory>30</maxHistory>
+            <cleanHistoryOnStart>false</cleanHistoryOnStart>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <!-- Daily rolling file appender for HTTP header logs -->
+    <appender name="HTTP_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/http.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- compressed daily files -->
+            <fileNamePattern>${LOG_PATH}/http-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- keep 30 days of logs -->
+            <maxHistory>30</maxHistory>
+            <cleanHistoryOnStart>false</cleanHistoryOnStart>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <!-- Route logs sent to the special logger name "CHAT_FILE" into the rotating file -->
+    <logger name="CHAT_FILE" level="INFO" additivity="false">
+        <appender-ref ref="CHAT_FILE" />
+    </logger>
+
+    <!-- Route logs sent to the special logger name "MCP_FILE" into the rotating file -->
+    <logger name="MCP_FILE" level="DEBUG" additivity="false">
+        <appender-ref ref="MCP_FILE" />
+    </logger>
+
+    <!-- Route logs sent to the special logger name "HTTP_FILE" into the rotating file -->
+    <logger name="HTTP_FILE" level="INFO" additivity="false">
+        <appender-ref ref="HTTP_FILE" />
+    </logger>
+
+    <!-- Enable DEBUG logging for Spring AI MCP components -->
+    <logger name="org.springframework.ai.mcp" level="DEBUG" additivity="true">
+        <appender-ref ref="MCP_FILE" />
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+    </root>
+</configuration>
