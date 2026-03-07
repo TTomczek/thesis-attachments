@@ -3,14 +3,14 @@
 "1";"GPT4.1-mini";"1";"453ms";"1";"8579";"Tool: list_issues, owner: ttomczek, repo: studygroupmap, state: open";"2";"true"
 "1";"Mistral Medium";"0";"-";"-";"-";"-";"0";"false"
 "1";"Mistral Medium";"1";"-";"-";"-";"-";"0";"false"
-"2";"GPT4.1-mini";"0";"505ms";"1";"3169";"Tool: create_repos_issues, owner: ttomczek, repo: studygroupmap, title: '�', body: '�', labels: enhancement";"Link";"Ja(kein label)"
-"2";"GPT4.1-mini";"1";"1062ms";"1";"3337";"Tool: create_repos_issues, owner: ttomczek, repo: studygroupmap, title: '�', body: '�', labels: ""enhancement""";"Link";"Ja(kein label)"
-"2";"Mistral Medium";"0";"606ms";"1";"3246";"Tool: create_repos_issues, owner: ttomczek, repo: studygroupmap, title: '�', body: '�', labels: accessibility";"Link";"Ja(kein label)"
-"2";"Mistral Medium";"1";"524ms";"1";"3303";"Tool: create_repos_issues, owner: ttomczek, repo: studygroupmap, title: '�', body: '�', labels: enhancement";"Link";"Ja(kein label)"
+"2";"GPT4.1-mini";"0";"505ms";"1";"3169";"Tool: create_repos_issues, owner: ttomczek, repo: studygroupmap, title: '�', body: '�', labels: enhancement";"Link";true (kein label)
+"2";"GPT4.1-mini";"1";"1062ms";"1";"3337";"Tool: create_repos_issues, owner: ttomczek, repo: studygroupmap, title: '�', body: '�', labels: ""enhancement""";"Link";true (kein label)
+"2";"Mistral Medium";"0";"606ms";"1";"3246";"Tool: create_repos_issues, owner: ttomczek, repo: studygroupmap, title: '�', body: '�', labels: accessibility";"Link";true (kein label)
+"2";"Mistral Medium";"1";"524ms";"1";"3303";"Tool: create_repos_issues, owner: ttomczek, repo: studygroupmap, title: '�', body: '�', labels: enhancement";"Link";true (kein label)
 "3";"GPT4.1-mini";"0";"916ms";"3";"3273";"Tool: list_repos_branches, owner: ttomczek, repo: studygroupmap; Tool: retrieve_branches_repos_protection, owner: ttomczek, repo: studygroupmap, branch: develop; Tool: retrieve_branches_repos_protection, owner: ttomczek, repo: studygroupmap, branch: develop";"2";"true"
 "3";"GPT4.1-mini";"1";"922ms";"3";"3273";"Tool: list_repos_branches, owner: ttomczek, repo: studygroupmap; Tool: retrieve_branches_repos_protection, owner: ttomczek, repo: studygroupmap, branch: master; Tool: retrieve_branches_repos_protection, owner: ttomczek, repo: studygroupmap, branch: develop";"2";"true"
-"3";"Mistral Medium";"0";"373ms";"1";"1172";"Tool: list_repos_branches, owner: ttomczek, repo: studygroupmap";"272";"Nein(keine Rule)"
-"3";"Mistral Medium";"1";"388ms";"1";"1172";"Tool: list_repos_branches, owner: ttomczek, repo: studygroupmap";"272";"Nein(keine Rule)"
+"3";"Mistral Medium";"0";"373ms";"1";"1172";"Tool: list_repos_branches, owner: ttomczek, repo: studygroupmap";"272";false (keine Rule)
+"3";"Mistral Medium";"1";"388ms";"1";"1172";"Tool: list_repos_branches, owner: ttomczek, repo: studygroupmap";"272";false (keine Rule)
 "4";"GPT4.1-mini";"0";"498ms";"1";"34281";"Tool: list_starred_repositories_users, username: ttomczek, per_page: 100";"dl-time,padws,todo,awesome,studygroupmap";"true"
 "4";"GPT4.1-mini";"1";"618ms";"1";"34281";"Tool: list_starred_repositories_users, username: ttomczek, per_page: 100";"dl-time,padws,todo,awesome,studygroupmap";"true"
 "4";"Mistral Medium";"0";"-";"-";"-";"-";"Request body too large";"false"

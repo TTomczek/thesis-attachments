@@ -1,0 +1,8 @@
+;Beschreibung aus;Parameter;Pfadparameter (issues/list-for-repo);Queryparameter (issues/list-for-repo);Parametertype (issues/list-for-repo);Requestbody (issues/create);Min/Max (issues/list-for-repo);Referenzen (issues/list-for-repo);Default (issues/list-for-repo);Example;Enum (issues/list-for-repo);Kombinationsschema (issues/create) (update_channel);Required (issues/list-for-repo);Security
+;Description/Summary (issues/list-for-repo);Beschreibung (issues/list-for-repo);;;;;;;;;;;;
+ConvertMCP;true;true;true;true;true;false (Nur erkannt);false;false;false;false;false;false;true (Falsche Darstellung);false
+MCPLink;true;true;true;true;false (Vorhanden aber falsch);true;false;false;false;false;true;Nicht einsehbar, da nur in Body;false;true (Generisch über Header)
+Tyk;false;true;true;true;true;false (Nur erkannt, addiotianlproperties: true);false;true;false;false;false;Nicht einsehbar, da nur in Body;true;true
+FastMCP;true;true;true;true;true (mit Format);;true;true;false;true;true;true;true;false (Nicht automatisch)
+OASMCP;true;true;true;true;true;true;false;true;true;false;true;true;true;true (mit Oauth)
+Stainless;true;true (nicht bei Pfadparameter);true;true;true (mit Format);true;false;true;false;false;true;true;true;false Nur über MCP Header

@@ -1,0 +1,7 @@
+;Tools;Resources;Progress;Security bei Tools nach MCP;Error Handling nach MCP;Completitions;Pagination (MCP);Logging;ContentTypes;OutputScheme;Structured Content
+ConvertMCP;true;false;false;false;false Fehler als Antwort;false;false;false;false Alles als TextContent;false;false
+MCPLink;true;false;false;false;true;false;false;false;false ImageType auskommentiert;false;false
+Tyk;true;false;false;false Nur Rate-Limiting;true (server.ts, startServer());false;false;false;false Nur JSON;true Nur in Code (mcpMapper.ts);false
+FastMCP;true;true (Über Mapping);true;false Nur Inputvalidierung, Rate-Limiting über Middlware;true (+Middleware);false;false;true;false;true;true
+OASMCP;true;false;false;false Nur Inputvalidierung;false;false;false;false;false;false;false
+Stainless;true;false;false;false;true;false;false;true;false In Code aber nicht genutzt;false;false
